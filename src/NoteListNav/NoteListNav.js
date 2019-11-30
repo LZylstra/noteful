@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import CircleButton from '../CircleButton/CircleButton'
 import ApiContext from '../ApiContext'
 import { countNotesForFolder } from '../notes-helpers'
+import AddFolder from '../AddFolder/AddFolder'
 import './NoteListNav.css'
 
 export default class NoteListNav extends React.Component {
@@ -32,6 +33,7 @@ export default class NoteListNav extends React.Component {
           <CircleButton
             tag={Link}
             to='/add-folder'
+            component = {<AddFolder />}
             type='button'
             className='NoteListNav__add-folder-button'
           >

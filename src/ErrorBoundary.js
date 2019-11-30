@@ -1,4 +1,5 @@
 import React from 'react';
+import './ErrorBoundary.css'
 
 class ErrorBoundary extends React.Component {
     state = {
@@ -18,6 +19,7 @@ class ErrorBoundary extends React.Component {
 
         return(
             <div>
+                <p class = "error">An error has occured, please reload the page.</p>
             </div>
         );
 
