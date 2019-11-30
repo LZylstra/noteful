@@ -1,4 +1,6 @@
 import React from 'react'
+import ApiContext from '../ApiContext';
+import config from '../config'
 
 
 class AddFolder extends React.Component {
@@ -24,44 +26,29 @@ class AddFolder extends React.Component {
         return res.json()
       })
       .then(() => {
-        this.context.addNote(folderId)
+        this.context.addFolder(folderId)
         // allow parent to perform extra behaviour
-        this.props.onAddNote(folderId)
+        this.props.onAddFolder(folderId)
       })
       .catch(error => {
         console.error({ error })
       })
   }
 
-  render() {
-    const { name, id, modified } = this.props
-    return (
-      <div className='Note'>
-        <h2 className='Note__title'>
-          <Link to={`/note/${id}`}>
-            {name}
-          </Link>
-        </h2>
-        <button
-          className='Note__delete'
-          type='button'
-          onClick={this.handleClickDelete}
-        >
-          <FontAwesomeIcon icon='trash-alt' />
-          {' '}
-          remove
-        </button>
-        <div className='Note__dates'>
-          <div className='Note__dates-modified'>
-            Modified
-            {' '}
-            <span className='Date'>
-              {format(parseISO(modified), 'do MMM yyyy')}
-            </span>
-          </div>
-        </div>
-      </div>
-    )
+  render(){
+    return(
+        <form>
+            <label> 
+              <strong>Name of folder:</strong> 
+            <input 
+                id= "foldername" 
+                type = "text"
+                onChange = {this.handleTextChange}
+            />
+            </label>
+            <button type = "submit">Submit </button>
+        </form>
+    );
   }
 }
 
