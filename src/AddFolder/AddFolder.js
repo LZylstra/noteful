@@ -3,7 +3,7 @@ import React from 'react'
 
 class AddFolder extends React.Component {
   static defaultProps ={
-    onAddNote: () => {},
+    onAddFolder: () => {},
   }
 
   static contextType = ApiContext;
