@@ -19,7 +19,7 @@ class ErrorBoundary extends React.Component {
 
         return(
             <div>
-                <p class = "error">An error has occured, please reload the page.</p>
+                <p className = "error">An error has occured, please reload the page.</p>
             </div>
         );
 
