@@ -104,6 +104,7 @@ class AddNote extends React.Component {
                 type = "text"
                 name = "noteName"
                 aria-label = "note name"
+                aria-required="true"
                 onChange={e => this.updateName(e.target.value)}
             />
             {this.state.name.touched === true && <ValidationError message ={this.validateNoteName()}/>}
@@ -113,6 +114,7 @@ class AddNote extends React.Component {
                   id= "noteContent" 
                   name="noteContent"
                   aria-label="note contents"
+                  aria-required="true"
                   onChange={e => this.updateContent(e.target.value)}
               />
               {this.state.content.touched === true && <ValidationError message={this.validateContent()}/>}
@@ -121,6 +123,7 @@ class AddNote extends React.Component {
                 <select id = "folderOption"
                   name = "folderOptionId"
                   aria-label = "Select folder to place note"
+                  aria-required="true"
                   required
                 >
                   <option value="">Select Folder</option>

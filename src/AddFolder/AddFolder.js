@@ -84,6 +84,7 @@ class AddFolder extends React.Component {
                 type = "text"
                 name = "folderName"
                 aria-label = "folder name"
+                aria-required="true"
                 />
                 {this.state.name.touched === true && <ValidationError message={folderError}/>}
             <button 
