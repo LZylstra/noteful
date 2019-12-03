@@ -14,7 +14,7 @@
   margin: 20px auto;
 }
 .NoteListNav__add-folder-button:hover {
-  background-color: #29862e;
+  background-color: #1D1A31;
   color: white;
 }
 
@@ -34,7 +34,8 @@
   cursor: pointer;
 }
 .NoteListNav__folder-link.active {
-  background-color: #102541;
+  background-color: #9A4C95;
+  color: #1D1A31;
 }
 
 .NoteListNav__num-notes {

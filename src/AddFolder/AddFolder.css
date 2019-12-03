@@ -1,13 +1,12 @@
-.addFolder_form{
-    position: absolute;
-    margin-top: 15%;
-    margin-left: 40%;
-    text-align: center;
-}
-.addFolder_form label{
-    padding: 4px;
+
+.button{
+    margin: 4px;
 }
 
-.addFolder_form strong{
-    padding: 4px;
+
+
+.addfolder_section{
+    padding: 10px;
+    margin: 0 auto;
+    max-width: 250px;
 }

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Route, Link} from 'react-router-dom';
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import NoteListNav from '../NoteListNav/NoteListNav';
+import SidebarNav from '../NoteListNav/NoteListNav';
 import NotePageNav from '../NotePageNav/NotePageNav';
 import NoteListMain from '../NoteListMain/NoteListMain';
 import NotePageMain from '../NotePageMain/NotePageMain';
@@ -66,7 +66,7 @@ class App extends Component {
                         exact
                         key={path}
                         path={path}
-                        component={NoteListNav}
+                        component={SidebarNav}
                     />
                 ))}
                 <ErrorBoundary>
@@ -104,6 +104,7 @@ class App extends Component {
         };
         return (
             <ApiContext.Provider value={value}>
+                <ErrorBoundary>
                 <div className="App">
                     <nav className="App__nav">{this.renderNavRoutes()}</nav>
                     <header className="App__header">
@@ -114,6 +115,7 @@ class App extends Component {
                     </header>
                     <main className="App__main">{this.renderMainRoutes()}</main>
                 </div>
+                </ErrorBoundary>
             </ApiContext.Provider>
         );
     }

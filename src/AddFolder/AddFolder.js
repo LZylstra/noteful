@@ -1,9 +1,9 @@
 import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import CircleButton from '../CircleButton/CircleButton'
 import ApiContext from '../ApiContext';
 import config from '../config'
 import nextId from "react-id-generator";
+import ValidationError from '../ValidationError'
+import PropTypes from 'prop-types'
 import './AddFolder.css'
 
 
@@ -12,10 +12,15 @@ class AddFolder extends React.Component {
     history: {
       goBack: () => { }
     },
-    match: {
-      params: {}
-    },
-    onAddFolder: () => {},
+  }
+  constructor(props){
+    super(props)
+    this.state = {
+      name: {
+        value: '',
+        touched: 'false'
+      }
+    }
   }
 
   static contextType = ApiContext;
@@ -23,59 +28,68 @@ class AddFolder extends React.Component {
   handleSubmit = e => {
     e.preventDefault()
     let folderId = nextId() + "folder";
-    let foldername = document.getElementById('folderName').value;
-    console.log(foldername)
+    const folder = {
+      id: folderId,
+      name: e.target['folderName'].value
+    }
 
     fetch(`${config.API_ENDPOINT}/folders`, {
       method: 'POST',
       headers: { 'Content-type': 'application/json' },
-      body:JSON.stringify({
-        "id": folderId,
-        "name": foldername
-      })
+      body:JSON.stringify(folder)
     })
       .then(res => {
         if (!res.ok)
           return res.json().then(e => Promise.reject(e))
         return res.json()
       })
-      .then((data) => {
-        this.context.addFolder(folderId)
-        // allow parent to perform extra behaviour
-        this.props.onAddFolder(folderId)
-        console.log(data)
+      .then(folder => {
+        this.context.addFolder(folder)
+        this.props.history.goBack(`folder/${folder.id}`)
       })
       .catch(error => {
         console.error({ error })
       })
 
-      this.props.history.push('/');
+  }
+  updateName(name){
+    this.setState({name: {value: name, touched: true}})
+  }
+
+  validateFolderName(){
+    const name = this.state.name.value.trim()
+    if(name.length === 0){
+      return 'Folder name is required'
+    }else if (name.length > 20){
+      return 'Folder name must be less than 20 characters'
+    }
   }
 
   render(){
+    const folderError = this.validateFolderName()
+
     return(
       <div className = "addfolder_section">
-        <form className = "addFolder_form">
-          {/* <CircleButton
-              tag='button'
-              role='link'
-              onClick={() => this.props.history.goBack()}
-              className='NotePageNav__back-button'
-          >
-              <FontAwesomeIcon icon='chevron-left' />
-              <br />
-              Back
-          </CircleButton> */}
-            <label> 
+        <h2>Create a new folder</h2>
+        <form className = "addFolder_form" 
+            action = '#' 
+            onSubmit={this.handleSubmit} 
+            onChange={e=>this.updateName(e.target.value)}>
+
+            <label htmlFor ="folderName"> 
               <strong>Name of folder:</strong> 
+            </label>
             <input 
                 id= "folderName" 
                 type = "text"
-            />
-            </label>
+                name = "folderName"
+                aria-label = "folder name"
+                />
+                {this.state.name.touched === true && <ValidationError message={folderError}/>}
             <button 
               type = "submit"
-              onClick = {this.handleSubmit}
+              className = "button"
+              disabled={this.validateFolderName()}
             >Submit </button>
         </form>
       </div>
@@ -83,4 +97,9 @@ class AddFolder extends React.Component {
   }
 }
 
+AddFolder.propTypes = {
+  requiredObjectWithShape: PropTypes.shape({
+    history: PropTypes.func.isRequired
+  })
+}
 export default AddFolder

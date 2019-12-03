@@ -1,9 +1,9 @@
 import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import CircleButton from '../CircleButton/CircleButton'
 import ApiContext from '../ApiContext';
 import config from '../config'
 import nextId from "react-id-generator";
+import ValidationError from '../ValidationError'
+import PropTypes from 'prop-types'
 import './AddNote.css'
 
 
@@ -12,105 +12,139 @@ class AddNote extends React.Component {
     history: {
       goBack: () => { }
     },
-    match: {
-        params: {}
-      },
-    onAddNote: () => {},
   }
-  state = {
-    folders: []
-};
+  constructor(props){
+    super(props)
+    this.state = {
+      name: {
+        value: '',
+        touched: 'false'
+      },
+      content: {
+        value: '',
+        touched: 'false'
+      },
+      folder: {
+        touched: 'false'
+      }
+    }
+  }
 
   static contextType = ApiContext;
-  getDropdownList(folders){
-      let foldersreturn = ""
-        folders.map(folder=> (
-        foldersreturn += `<option = "${folder.name}">${folder.name} </option> `
-    ));
-    return foldersreturn;
+
+  updateName(name){
+    this.setState({name: {value: name, touched: true}})
   }
+
+  updateContent(content){
+    this.setState({content: {value: content, touched: true}})
+  }
+
+  validateNoteName(){
+    const name = this.state.name.value.trim()
+    if(name.length === 0){
+      return 'Note name is required'
+    }else if (name.length > 20){
+      return 'Note name must be less than 20 characters'
+    }
+  }
+
+  validateContent(){
+    const content = this.state.content.value.trim()
+    if (content.length === 0){
+      return 'Note cannot be blank'
+    }
+  }
+
+
   handleSubmit = e => {
     e.preventDefault()
     let noteId = nextId() + "note";
-    let notename = document.getElementById('noteName').value;
-    let tempDate = new Date();
-    let date = tempDate.getFullYear() + '-' + (tempDate.getMonth()+1) + '-' + tempDate.getDate() +' '+ tempDate.getHours()+':'+ tempDate.getMinutes()+':'+ tempDate.getSeconds();
-    let modifiedDate = date;
-    let folderID = document.getElementById("folderoption").value;
-    let content = document.getElementById('noteContent').value;
+    let newModified = new Date();
+
+    const newNote = {
+      id: noteId,
+      name: e.target['noteName'].value,
+      content: e.target['noteContent'].value,
+      folderId: e.target['folderOptionId'].value,
+      modified: newModified,
+    }
 
 
     fetch(`${config.API_ENDPOINT}/notes`, {
       method: 'POST',
       headers: { 'Content-type': 'application/json' },
-      body:JSON.stringify({
-        "id": noteId,
-        "name": notename,
-        "modified": modifiedDate,
-        "folderID": folderID,
-        "content": content
-      })
+      body:JSON.stringify(newNote)
     })
       .then(res => {
         if (!res.ok)
           return res.json().then(e => Promise.reject(e))
         return res.json()
       })
-      .then((data) => {
-        this.context.addNote(noteId)
-        // allow parent to perform extra behaviour
-        this.props.onAddNote(noteId)
+      .then(note => {
+        this.context.addNote(note)
+        this.props.history.goBack(`/folder/${note.folderId}`)
       })
       .catch(error => {
         console.error({ error })
       })
-
-      this.props.history.push('/');
   }
 
   render(){
     const { folders=[] } = this.context
-      let folderslist = this.getDropdownList(folders);
-      console.log(folderslist)
+
     return(
       <div className = "addnote_section">
-        <form className = "addnote_form">
-          {/* <CircleButton
-              tag='button'
-              role='link'
-              onClick={() => this.props.history.goBack()}
-              className='NotePageNav__back-button'
-          >
-              <FontAwesomeIcon icon='chevron-left' />
-              <br />
-              Back
-          </CircleButton> */}
-            <label> 
-              <strong>Name of note: </strong> 
+        <h2>Create a new note</h2>
+        <form className = "addnote_form" action ='#' onSubmit={this.handleSubmit}>
+
+            <label htmlFor = 'noteName'>Name of note: </label>
             <input 
                 id= "noteName" 
                 type = "text"
+                name = "noteName"
+                aria-label = "note name"
+                onChange={e => this.updateName(e.target.value)}
             />
-            </label>
-            <label> 
-              <strong>Folder: </strong> 
-                <select id = "folderoption">{folderslist}</select>
-            </label>
-            <label> 
-              <strong>Content: </strong> 
-                <input 
-                    id= "noteContent" 
-                    type = "textarea"
-                />
-            </label>
+            {this.state.name.touched === true && <ValidationError message ={this.validateNoteName()}/>}
+
+            <label htmlFor = "noteContent">Content: </label>
+              <textarea
+                  id= "noteContent" 
+                  name="noteContent"
+                  aria-label="note contents"
+                  onChange={e => this.updateContent(e.target.value)}
+              />
+              {this.state.content.touched === true && <ValidationError message={this.validateContent()}/>}
+            
+            <label htmlFor = "folderOption">Folder: </label>
+                <select id = "folderOption"
+                  name = "folderOptionId"
+                  aria-label = "Select folder to place note"
+                  required
+                >
+                  <option value="">Select Folder</option>
+                  {folders.map(folder =>
+                    <option key={folder.id} value={folder.id}>{folder.name}</option>
+                  )}
+                </select>
+                
+
             <button 
               type = "submit"
-              onClick = {this.handleSubmit}
+              className = "button"
+              disabled={this.validateContent() || this.validateNoteName()}
             >Submit </button>
         </form>
       </div>
     );
   }
+}
+
+AddNote.propTypes = {
+  requiredObjectWithShape: PropTypes.shape({
+    history: PropTypes.func.isRequired
+  })
 }
 
 export default AddNote
