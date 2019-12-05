@@ -40,6 +40,7 @@ class Note extends React.Component {
 
   render() {
     const { name, id, modified } = this.props
+
     return (
       <div className='Note'>
         <h2 className='Note__title'>
@@ -61,7 +62,7 @@ class Note extends React.Component {
             Modified
             {' '}
             <span className='Date'>
-              {format(parseISO(modified), 'do MMM yyyy')}
+              {(modified)? format(parseISO(modified), 'do MMM yyyy'):''}
             </span>
           </div>
         </div>
