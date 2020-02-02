@@ -1,7 +1,7 @@
 import React from "react";
 import ApiContext from "../ApiContext";
 import config from "../config";
-import nextId from "react-id-generator";
+//import nextId from "react-id-generator";
 import ValidationError from "../ValidationError";
 import PropTypes from "prop-types";
 import "./AddFolder.css";
@@ -15,7 +15,7 @@ class AddFolder extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: {
+      folder_name: {
         value: "",
         touched: "false"
       }
@@ -34,7 +34,7 @@ class AddFolder extends React.Component {
     fetch(`${config.API_ENDPOINT}/folders`, {
       method: "POST",
       headers: { "Content-type": "application/json" },
-      body: JSON.stringify(folder)
+      body: JSON.stringify({ folder_name: e.target["folderName"].value })
     })
       .then(res => {
         if (!res.ok) return res.json().then(e => Promise.reject(e));
@@ -42,18 +42,18 @@ class AddFolder extends React.Component {
       })
       .then(folder => {
         this.context.addFolder(folder);
-        this.props.history.goBack(`folder/${folder.id}`);
+        this.props.history.goBack(`/`);
       })
       .catch(error => {
         console.error({ error });
       });
   };
   updateName(name) {
-    this.setState({ name: { value: name, touched: true } });
+    this.setState({ folder_name: { value: name, touched: true } });
   }
 
   validateFolderName() {
-    const name = this.state.name.value.trim();
+    const name = this.state.folder_name.value.trim();
     if (name.length === 0) {
       return "Folder name is required";
     } else if (name.length > 20) {
@@ -83,7 +83,7 @@ class AddFolder extends React.Component {
             aria-label="folder name"
             aria-required="true"
           />
-          {this.state.name.touched === true && (
+          {this.state.folder_name.touched === true && (
             <ValidationError message={folderError} />
           )}
           <button
