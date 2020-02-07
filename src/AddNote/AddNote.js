@@ -1,7 +1,6 @@
 import React from "react";
 import ApiContext from "../ApiContext";
 import config from "../config";
-import nextId from "react-id-generator";
 import ValidationError from "../ValidationError";
 import PropTypes from "prop-types";
 import "./AddNote.css";
@@ -57,7 +56,6 @@ class AddNote extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    //let noteId = nextId() + "note";
     let newModified = new Date();
 
     const newNote = {

@@ -1,7 +1,6 @@
 import React from "react";
 import ApiContext from "../ApiContext";
 import config from "../config";
-//import nextId from "react-id-generator";
 import ValidationError from "../ValidationError";
 import PropTypes from "prop-types";
 import "./AddFolder.css";
@@ -26,7 +25,6 @@ class AddFolder extends React.Component {
 
   handleSubmit = e => {
     e.preventDefault();
-    //let folderId = nextId() + "folder";
     const folder = {
       folder_name: e.target["folderName"].value
     };
@@ -41,7 +39,6 @@ class AddFolder extends React.Component {
         return res.json();
       })
       .then(folder => {
-        console.log("this fired");
         this.context.addFolder(folder);
         this.props.history.push(`/`);
       })
