@@ -97,9 +97,4 @@ class AddFolder extends React.Component {
   }
 }
 
-AddFolder.propTypes = {
-  requiredObjectWithShape: PropTypes.shape({
-    history: PropTypes.func.isRequired
-  })
-};
 export default AddFolder;

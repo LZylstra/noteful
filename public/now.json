@@ -1,8 +1,15 @@
 {
   "version": 2,
-  "name": "noteful-app",
+  "alias": "noteful",
+  "name": "noteful",
   "routes": [
-    { "handle": "filesystem" },
-    { "src": "/.*", "dest": "/index.html" }
+    {
+      "src": "^/static/(.*)",
+      "dest": "/static/$1"
+    },
+    {
+      "src": ".*",
+      "dest": "/index.html"
+    }
   ]
 }

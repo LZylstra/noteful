@@ -144,10 +144,4 @@ class AddNote extends React.Component {
   }
 }
 
-AddNote.propTypes = {
-  requiredObjectWithShape: PropTypes.shape({
-    history: PropTypes.func.isRequired
-  })
-};
-
 export default AddNote;
