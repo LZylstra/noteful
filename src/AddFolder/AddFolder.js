@@ -34,15 +34,16 @@ class AddFolder extends React.Component {
     fetch(`${config.API_ENDPOINT}/folders`, {
       method: "POST",
       headers: { "Content-type": "application/json" },
-      body: JSON.stringify({ folder_name: e.target["folderName"].value })
+      body: JSON.stringify(folder)
     })
       .then(res => {
         if (!res.ok) return res.json().then(e => Promise.reject(e));
         return res.json();
       })
       .then(folder => {
+        console.log("this fired");
         this.context.addFolder(folder);
-        this.props.history.goBack(`/`);
+        this.props.history.push(`/`);
       })
       .catch(error => {
         console.error({ error });
